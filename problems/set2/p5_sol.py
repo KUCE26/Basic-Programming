@@ -1,0 +1,6 @@
+sentence = input()
+target = input()
+words = sentence.split()
+print(len(words))
+print("-".join(words))
+print(target in words)

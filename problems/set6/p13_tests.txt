@@ -1,0 +1,17 @@
+4
+elice@elice.io
+elice@@elice.io
+elice@eliceio
+elice@elice..io
+=====
+3
+foy1229@korea.ac.kr
+noat.korea.ac.kr
+student@korea.
+=====
+2
+a@b.c
+@b.c
+=====
+1
+x.y@z.w

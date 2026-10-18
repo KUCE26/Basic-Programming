@@ -1,0 +1,5 @@
+a = int(input())
+b = int(input())
+print(f"둘레: {2 * (a + b)}")
+print(f"넓이: {a * b}")
+print(f"대각선 제곱: {a ** 2 + b ** 2}")

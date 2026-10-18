@@ -1,0 +1,17 @@
+3
+  aLICE 
+bob
+CHARLIE
+=====
+2
+ elice
+RABBIT   
+=====
+1
+x
+=====
+4
+  A
+zOE
+  mIa  
+KIM

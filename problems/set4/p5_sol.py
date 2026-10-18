@@ -1,0 +1,5 @@
+s = input().strip()
+print(f"글자 수: {len(s)}")
+print(f"첫 글자: {s[0]}, 마지막 글자: {s[-1]}")
+print(f"짝수 인덱스: {s[::2]}")
+print(f"소문자: {s.lower()}")

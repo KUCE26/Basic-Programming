@@ -1,0 +1,7 @@
+line = input().split()
+name = input()
+pos = int(input())
+line.insert(pos, name)
+print(line)
+line.pop()
+print(line)

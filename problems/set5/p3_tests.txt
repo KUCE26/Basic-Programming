@@ -1,0 +1,9 @@
+apple banana apple cherry banana apple
+=====
+dog cat bird
+=====
+hello
+=====
+same same same same
+=====
+zebra Apple apple mango zebra

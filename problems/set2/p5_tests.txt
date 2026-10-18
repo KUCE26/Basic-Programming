@@ -1,0 +1,14 @@
+i love python
+love
+=====
+hello world again and again
+bye
+=====
+python
+python
+=====
+one two three four five six seven
+six
+=====
+a b a
+c

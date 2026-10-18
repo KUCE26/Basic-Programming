@@ -1,0 +1,5 @@
+phone = input()
+digits = phone.replace("-", "")
+print(digits)
+print(digits[-4:])
+print(phone[:4] + "****" + phone[8:])

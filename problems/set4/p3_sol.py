@@ -1,0 +1,5 @@
+nums = list(map(int, input().split()))
+print(nums[::2])
+print(nums[::-1])
+nums.sort()
+print(nums[-2])

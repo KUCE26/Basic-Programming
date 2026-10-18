@@ -1,0 +1,36 @@
+3
+apple 사과
+book 책
+cat 고양이
+3
+book
+dog
+apple
+=====
+2
+rabbit 토끼
+watch 시계
+2
+clock
+watch
+=====
+1
+sun 태양
+0
+=====
+1
+sun 태양
+1
+sun
+=====
+4
+red 빨강
+blue 파랑
+green 초록
+yellow 노랑
+5
+blue
+pink
+red
+yellow
+black

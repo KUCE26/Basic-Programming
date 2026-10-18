@@ -1,0 +1,6 @@
+scores = list(map(int, input().split()))
+scores.sort()
+scores.remove(scores[0])
+scores.remove(scores[-1])
+print(scores)
+print(f"합계: {sum(scores)}")

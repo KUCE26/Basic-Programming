@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>실습 · 기초프로그래밍 모의테스트</title>
+  <meta name="description" content="기초프로그래밍 중간고사 모의테스트 — 브라우저에서 바로 Python 코드를 작성하고 실행·제출하면 엘리스처럼 테스트케이스로 채점돼요">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/app.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/ace.js" crossorigin="anonymous"></script>
+  <script defer src="assets/problems.js"></script>
+  <script defer src="assets/common.js"></script>
+  <script defer src="assets/practice.js"></script>
+</head>
+<body class="ide">
+  <header class="top wrap ide-top">
+    <a class="brand" href="index.html">
+      <img src="assets/img/ku-emblem.webp" alt="" width="164" height="220">
+      <span><b>기초프로그래밍</b>중간고사 모의테스트</span>
+    </a>
+    <nav class="levels sets ide-sets" id="set-tabs" aria-label="모의테스트 세트">
+      <a href="practice.html?set=1" data-set="1">A<small></small></a>
+      <a href="practice.html?set=2" data-set="2">B<small></small></a>
+      <a href="practice.html?set=3" data-set="3">C<small></small></a>
+      <a href="practice.html?set=4" data-set="4">D<small></small></a>
+      <a href="practice.html?set=5" data-set="5">E<small></small></a>
+      <a href="practice.html?set=6" data-set="6">과제<small></small></a>
+    </nav>
+    <nav class="top-links" aria-label="페이지">
+      <a href="index.html">대시보드</a>
+    </nav>
+  </header>
+
+  <div class="wrap qbar">
+    <nav class="qnums" id="qnums" aria-label="문제 번호"></nav>
+    <div class="progress" aria-live="polite">
+      <span class="bar" aria-hidden="true"><i class="ok" id="bar-ok"></i><i class="retry" id="bar-retry"></i></span>
+      <span>통과 <b id="p-ok">0</b> / <span id="p-total">10</span><span id="p-score-wrap"> · <b id="p-score">0</b>점</span></span>
+    </div>
+  </div>
+
+  <main class="wrap ide-main" id="ide">
+    <noscript><p>실습 환경을 쓰려면 JavaScript를 켜 주세요.</p></noscript>
+
+    <section class="pane pane-q" aria-labelledby="q-title">
+      <div class="q-head">
+        <span class="pno" id="q-no">1</span>
+        <h1 id="q-title">문제</h1>
+        <span class="tag sec" id="q-slot"></span>
+        <span class="tag" id="q-lesson"></span>
+        <span class="state" id="q-state"></span>
+      </div>
+      <article class="q-body" id="q-body"></article>
+      <nav class="q-nav">
+        <button class="btn" type="button" id="q-prev">← 이전 문제</button>
+        <span class="grow"></span>
+        <button class="btn" type="button" id="q-next">다음 문제 →</button>
+      </nav>
+    </section>
+
+    <section class="pane pane-ed" aria-label="코드 작성">
+      <div class="ed-head">
+        <span class="file"><i aria-hidden="true"></i>main.py</span>
+        <span class="pystat" id="pystat"><span class="dot"></span>Python 준비 중…</span>
+        <span class="grow"></span>
+        <button class="tool" type="button" id="ed-reset">시작 코드로 되돌리기</button>
+        <button class="tool" type="button" id="ed-sol" aria-pressed="false">정답 보기</button>
+      </div>
+      <div class="editor" id="editor" role="textbox" aria-label="코드 편집기" aria-multiline="true"></div>
+      <div class="sol" id="sol" hidden>
+        <div class="sol-h"><b>모범 답안</b><span>한 번 베끼지 말고, 어디가 달랐는지 비교해 본 뒤 내 코드로 다시 고쳐서 제출해 보세요.</span><button class="tool" type="button" id="sol-copy">편집기에 붙여넣기</button></div>
+        <pre id="sol-code"></pre>
+      </div>
+
+      <div class="run-row">
+        <button class="run" type="button" id="btn-run" disabled><span class="ic">▶</span>실행</button>
+        <button class="submit" type="button" id="btn-submit" disabled><span class="ic">✓</span>제출</button>
+        <span class="run-note" id="run-note">실행은 아래 <b>입력</b> 탭의 내용으로, 제출은 숨겨진 테스트 전부로 채점돼요.</span>
+      </div>
+
+      <div class="out">
+        <div class="out-tabs" role="tablist">
+          <button class="otab" type="button" role="tab" id="tab-run" aria-selected="true" data-tab="run">실행 결과</button>
+          <button class="otab" type="button" role="tab" id="tab-in" aria-selected="false" data-tab="in">입력</button>
+          <button class="otab" type="button" role="tab" id="tab-grade" aria-selected="false" data-tab="grade">채점 결과 <span class="cnt" id="grade-cnt"></span></button>
+        </div>
+        <div class="opanel" id="panel-run" role="tabpanel"><pre class="console" id="console">아직 실행하지 않았어요. 코드를 작성한 뒤 <b>실행</b>을 누르세요.</pre></div>
+        <div class="opanel" id="panel-in" role="tabpanel" hidden>
+          <p class="in-note">프로그램이 <code>input()</code>으로 읽을 내용이에요. 한 줄에 하나씩, 입력 예시처럼 적으세요.</p>
+          <textarea class="stdin" id="stdin" spellcheck="false" rows="6"></textarea>
+          <div class="in-presets" id="in-presets"></div>
+        </div>
+        <div class="opanel" id="panel-grade" role="tabpanel" hidden><div id="grade"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    Python은 내 브라우저 안에서 실행돼요(Pyodide · CPython 3.12). 코드와 채점 기록은 이 브라우저에만 저장되고 어디로도 보내지 않아요. · <a href="index.html">대시보드</a>
+  </footer>
+</body>
+</html>
