@@ -11,7 +11,7 @@ student@korea.
 =====
 2
 a@b.c
-@b.c
+ab@.b.c
 =====
 1
 x.y@z.w

@@ -5,7 +5,7 @@ my first report
 z
 =====
 a b c
- 
+_
 =====
 banana
 a
