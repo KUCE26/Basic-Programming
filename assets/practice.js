@@ -182,6 +182,8 @@
     '  py.setStderr({ batched: function (s) { err += s + "\\n"; } });',
     '  var ns = py.globals.get("dict")(); ns.set("__name__", "__main__");',
     '  try { py.runPython(code, { globals: ns }); } catch (e) { err += cleanErr(e.message); } finally { ns.destroy(); }',
+    '  // 프로그램이 다 읽지 않은 입력이 다음 실행으로 넘어가지 않게 남은 stdin 을 비운다',
+    '  try { py.runPython("import sys\\nsys.stdin.read()"); } catch (e) {}',
     '  return { out: out, err: err.trim() };',
     '}',
     'onmessage = function (e) {',
