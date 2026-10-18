@@ -54,7 +54,7 @@
     document.getElementById('p-ok').textContent = st.pass;
     document.getElementById('p-total').textContent = st.total;
     document.getElementById('p-score').textContent = st.pass * 10;
-    document.getElementById('p-score-wrap').hidden = S.n === 6;   // 과제 세트는 점수 대신 통과 수만
+    document.getElementById('p-score-wrap').hidden = !S.scored;   // 과제·연습 세트는 점수 대신 통과 수만
     document.getElementById('bar-ok').style.width = (st.pass / st.total * 100) + '%';
     document.getElementById('bar-retry').style.width = ((st.tried - st.pass) / st.total * 100) + '%';
   }
@@ -73,6 +73,7 @@
   document.getElementById('q-title').textContent = Q.title;
   document.getElementById('q-slot').textContent = Q.slot;
   document.getElementById('q-lesson').textContent = '엘리스 ' + Q.lesson;
+  if (S.outside) { var ob = document.createElement('span'); ob.className = 'tag warn'; ob.textContent = '중간고사 범위 밖'; document.getElementById('q-lesson').after(ob); }
   (function () {
     var h = Q.story + '<h3>지시사항</h3>' + Q.instructions;
     Q.examples.forEach(function (ex, i) {
@@ -179,7 +180,7 @@
     '  py.setStdin({ stdin: function () { return i < lines.length ? lines[i++] + "\\n" : null; }, autoEOF: false, isatty: false });',
     '  py.setStdout({ batched: function (s) { out += s + "\\n"; } });',
     '  py.setStderr({ batched: function (s) { err += s + "\\n"; } });',
-    '  var ns = py.globals.get("dict")();',
+    '  var ns = py.globals.get("dict")(); ns.set("__name__", "__main__");',
     '  try { py.runPython(code, { globals: ns }); } catch (e) { err += cleanErr(e.message); } finally { ns.destroy(); }',
     '  return { out: out, err: err.trim() };',
     '}',
@@ -314,7 +315,7 @@
     BP.saveProgress(progress);
     renderTabs(); renderNums(); renderState();
     var sum = '<div class="g-sum ' + (all ? 'pass' : 'fail') + '"><span class="big">' + passed + ' / ' + total + '</span>' +
-      (all ? '<span>모든 테스트 통과!' + (S.n === 6 ? '' : ' 이 문제는 10점이에요.') + '</span>' : '<span>' + (timedOut ? '시간 초과' : '틀린 테스트가 있어요') + ' — 시험에선 모두 맞아야 점수를 받아요.</span>') +
+      (all ? '<span>모든 테스트 통과!' + (S.scored ? ' 이 문제는 10점이에요.' : '') + '</span>' : '<span>' + (timedOut ? '시간 초과' : '틀린 테스트가 있어요') + ' — 시험에선 모두 맞아야 점수를 받아요.</span>') +
       '<small>' + (all ? '다음 문제로 넘어가세요.' : '빨간 줄이 기대 출력과 다른 줄이에요. 띄어쓰기·콜론·소수점 자리까지 보세요.') + '</small>' +
       (all && qNo < S.problems.length ? '<button class="tool" type="button" id="g-next">다음 문제 →</button>' : '') + '</div>';
     gradeBox.innerHTML = sum + body;

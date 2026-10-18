@@ -26,6 +26,11 @@
 .slotlist { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 6px 14px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--body); }
 .slotlist li b { color: var(--gold-hi); font-variant-numeric: tabular-nums; margin-right: 6px; }
 
+.setcard.outside { opacity: .8; border-style: dashed; border-color: var(--muted); box-shadow: none; }
+.setcard.outside:hover { border-color: var(--body); }
+.tag.warn { color: #2a1c00; background: var(--amber); box-shadow: none; }
+.ide-sets a.outside { opacity: .75; }
+
 /* ── IDE 레이아웃 ── */
 body.ide { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
 .ide-top { padding-bottom: 10px; }

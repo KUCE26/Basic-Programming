@@ -16,20 +16,28 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 
 SET_INFO = {
-    1: ("A", "편의점에서 할인 쿠폰까지", "입출력·리스트·딕셔너리·문자열·조건·반복·함수 10슬롯을 가장 기본형으로 묶은 세트"),
-    2: ("B", "지각 시간부터 가변 인자까지", "A세트와 같은 10슬롯, 소재와 요구 출력 형식을 바꾼 변형"),
-    3: ("C", "직사각형 밭부터 프로필 카드까지", "윤년·학점 등 조건 분기가 조금 더 긴 세트"),
-    4: ("D", "택시 요금부터 최솟값 직접 구하기까지", "FizzBuzz 변형, 두 번째로 큰 값 등 반복문 응용이 많은 세트"),
-    5: ("E", "피자 나누기부터 리스트 변환기까지", "구구단 표·더치페이 등 출력 형식 맞추기와 함수 심화가 중심인 세트"),
-    6: ("과제", "엘리스 4차시·8차시 과제 15문제", "교수님이 '시험 난이도의 기준'이라고 한 엘리스 과제 원본. 자동 채점이 되도록 입력·출력 코드만 붙였어요"),
+    1: ("A", "A세트", "편의점에서 할인 쿠폰까지", "입출력·리스트·딕셔너리·문자열·조건·반복·함수 10슬롯을 가장 기본형으로 묶은 세트"),
+    2: ("B", "B세트", "지각 시간부터 가변 인자까지", "A세트와 같은 10슬롯, 소재와 요구 출력 형식을 바꾼 변형"),
+    3: ("C", "C세트", "직사각형 밭부터 프로필 카드까지", "윤년·학점 등 조건 분기가 조금 더 긴 세트"),
+    4: ("D", "D세트", "택시 요금부터 최솟값 직접 구하기까지", "FizzBuzz 변형, 두 번째로 큰 값 등 반복문 응용이 많은 세트"),
+    5: ("E", "E세트", "피자 나누기부터 리스트 변환기까지", "구구단 표·더치페이 등 출력 형식 맞추기와 함수 심화가 중심인 세트"),
 }
-SET6 = [("산술 연산", "4차시"), ("변수·계산", "4차시"), ("리스트 remove", "4차시"), ("리스트 sort", "4차시"), ("in·논리 연산", "4차시"),
-        ("딕셔너리", "4차시"), ("문자열 strip", "4차시"), ("% 포맷팅", "4차시"),
-        ("조건문·산술", "8차시"), ("for·print(end=)", "8차시"), ("for·in", "8차시"), ("for·리스트 인덱스", "8차시"),
-        ("함수·count/split", "8차시"), ("for·max/min", "8차시"), ("함수·딕셔너리", "8차시")]
+# 6번 이후 세트(엘리스 과제·연습)는 problems/setN/meta.json 에 label·title·sub·lead·slots 가 있다.
 
 SLOTS = ["입출력·산술", "포맷팅·형 변환", "리스트", "딕셔너리", "문자열", "조건문", "for 반복", "while·break", "함수", "함수 심화"]
 LESSON = ["2차시", "2·4차시", "3차시", "4차시", "4차시", "5차시", "6차시", "6차시", "7차시", "8차시"]
+
+
+def set_meta(n):
+    d = os.path.join(ROOT, "problems", f"set{n}")
+    mp = os.path.join(d, "meta.json")
+    if os.path.exists(mp):
+        m = json.load(open(mp, encoding="utf-8"))
+    else:
+        label, title, sub, lead = SET_INFO[n]
+        m = {"label": label, "title": title, "sub": sub, "lead": lead, "slots": [list(x) for x in zip(SLOTS, LESSON)]}
+    m["count"] = len([f for f in os.listdir(d) if re.fullmatch(r"p\d+\.md", f)])
+    return m
 
 
 def norm(s):
@@ -110,7 +118,7 @@ def split_sections(md):
     return title, story, secs
 
 
-def build_problem(n, k):
+def build_problem(n, k, meta):
     d = os.path.join(ROOT, "problems", f"set{n}")
     md = open(f"{d}/p{k}.md", encoding="utf-8").read().strip()
     sol_path = f"{d}/p{k}_sol.py"
@@ -152,8 +160,8 @@ def build_problem(n, k):
         "id": f"s{n}q{k}",
         "no": k,
         "title": title,
-        "slot": SET6[k - 1][0] if n == 6 else SLOTS[k - 1],
-        "lesson": SET6[k - 1][1] if n == 6 else LESSON[k - 1],
+        "slot": meta["slots"][k - 1][0],
+        "lesson": meta["slots"][k - 1][1],
         "story": md_to_html(story),
         "instructions": instr_html,
         "examples": examples,
@@ -167,13 +175,14 @@ def build_problem(n, k):
 def main():
     sets = []
     total_cases = 0
-    for n in range(1, 7):
-        label, sub, lead = SET_INFO[n]
-        count = 15 if n == 6 else 10
-        probs = [build_problem(n, k) for k in range(1, count + 1)]
+    dirs = sorted(int(x[3:]) for x in os.listdir(os.path.join(ROOT, "problems")) if re.fullmatch(r"set\d+", x))
+    for n in dirs:
+        meta = set_meta(n)
+        probs = [build_problem(n, k, meta) for k in range(1, meta["count"] + 1)]
         total_cases += sum(len(p["cases"]) for p in probs)
-        sets.append({"n": n, "label": label, "title": ("엘리스 과제" if n == 6 else f"{label}세트"), "sub": sub, "lead": lead, "problems": probs})
-        print(f"set{n}: {count}문제, 테스트 {sum(len(p['cases']) for p in probs)}개")
+        sets.append({"n": n, "label": meta["label"], "title": meta["title"], "sub": meta["sub"], "lead": meta["lead"],
+                     "scored": meta.get("scored", True), "outside": meta.get("outside", False), "problems": probs})
+        print(f"set{n}: {meta['count']}문제, 테스트 {sum(len(p['cases']) for p in probs)}개")
     data = {"sets": sets, "slots": SLOTS}
     js = "/* tools/build.py 가 problems/ 에서 만든 파일 — 직접 고치지 말고 problems/ 를 고친 뒤 다시 빌드하세요 */\nwindow.BP_PROBLEMS = " + json.dumps(data, ensure_ascii=False) + ";\n"
     out = os.path.join(ROOT, "assets", "problems.js")

@@ -4,7 +4,7 @@
   var box = document.getElementById('sets');
   if (!D || !box || !window.BP) return;
   var esc = BP.escapeHtml;
-  var LEVEL = { 1: '1', 2: '2', 3: '3', 4: '4', 5: '4', 6: '2' };   // 카드 테두리 색: A 청록 · B 금 · C 주황 · D·E 크림슨 · 과제 금
+  var LEVEL = { 1: '1', 2: '2', 3: '3', 4: '4', 5: '4', 6: '2', 7: '2', 8: '0' };   // 카드 테두리 색: A 청록 · B 금 · C 주황 · D·E 크림슨 · 과제·연습 금 · 범위 밖 회색
 
   function render() {
     var progress = BP.loadProgress();
@@ -21,12 +21,12 @@
         var r = progress[q.id], cls = !r ? '' : (r.passed === r.total ? 'ok' : 'retry');
         return '<i class="' + cls + '" title="' + esc(q.no + '. ' + q.title) + '">' + q.no + '</i>';
       }).join('');
-      h += '<a class="setcard" data-level="' + LEVEL[set.n] + '" href="practice.html?set=' + set.n + '&q=' + first + '">' +
+      h += '<a class="setcard' + (set.outside ? ' outside' : '') + '" data-level="' + LEVEL[set.n] + '" href="practice.html?set=' + set.n + '&q=' + first + '">' +
         '<div class="sc-h"><span class="pno">' + esc(set.label) + '</span><h3>' + esc(set.title) + '</h3></div>' +
         '<p>' + esc(set.sub) + '</p>' +
         '<div class="sc-q">' + qs + '</div>' +
         '<span class="sc-bar"><i class="ok" style="width:' + (st.pass / st.total * 100) + '%"></i><i class="retry" style="width:' + ((st.tried - st.pass) / st.total * 100) + '%"></i></span>' +
-        '<div class="sc-foot"><span>통과 <b>' + st.pass + '</b> / ' + st.total + (set.n === 6 ? '' : ' · <b>' + (st.pass * 10) + '</b>점') + '</span><span>' + (st.tried ? (st.pass === st.total ? '완료 ✓' : first + '번부터 이어서 →') : '시작하기 →') + '</span></div>' +
+        '<div class="sc-foot"><span>통과 <b>' + st.pass + '</b> / ' + st.total + (set.scored ? ' · <b>' + (st.pass * 10) + '</b>점' : '') + '</span><span>' + (st.tried ? (st.pass === st.total ? '완료 ✓' : first + '번부터 이어서 →') : '시작하기 →') + '</span></div>' +
         '</a>';
     });
     box.innerHTML = h;
