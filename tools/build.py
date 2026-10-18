@@ -188,6 +188,15 @@ def main():
     out = os.path.join(ROOT, "assets", "problems.js")
     open(out, "w", encoding="utf-8").write(js)
     print(f"→ {out} ({len(js)//1024} KB, 테스트 {total_cases}개)")
+    # 브라우저 캐시(GitHub Pages 는 10분) 때문에 옛 파일이 쓰이지 않도록 html 의 ?v= 를 올린다
+    import time
+    v = str(int(time.time()))
+    for f in ("index.html", "practice.html"):
+        hp = os.path.join(ROOT, f)
+        h = open(hp, encoding="utf-8").read()
+        h = re.sub(r"(assets/[a-z]+\.(?:css|js))\?v=\d+", lambda m: m.group(1) + "?v=" + v, h)
+        open(hp, "w", encoding="utf-8").write(h)
+    print(f"html ?v={v}")
 
 
 if __name__ == "__main__":
