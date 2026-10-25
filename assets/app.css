@@ -156,3 +156,31 @@ body.ide { min-height: 100vh; min-height: 100svh; display: flex; flex-direction:
   .pystat .dot { animation: none; }
   .setcard { transition: none; }
 }
+
+/* ── 트랙 선택 (대시보드) ── */
+.tracks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding-top: 16px; }
+.tracks a { --cut: 10px; display: flex; flex-direction: column; gap: 2px; padding: 14px 16px 13px; color: var(--body); text-decoration: none; background: rgba(11, 26, 32, .8); box-shadow: inset 0 0 0 1px var(--line); clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); transition: transform .12s ease; }
+.tracks a:hover { color: var(--ivory); box-shadow: inset 0 0 0 1px var(--ac-edge); transform: translateY(-2px); }
+.tracks a .tk { font-size: 11.5px; font-weight: 800; letter-spacing: .18em; color: var(--ac-hi); }
+.tracks a b { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; color: var(--ivory); }
+.tracks a small { font-size: 12.5px; color: var(--muted); }
+.tracks a[aria-current="page"] { color: var(--ac-ink); background: var(--ac-fill); box-shadow: none; }
+.tracks a[aria-current="page"] .tk, .tracks a[aria-current="page"] b { color: var(--ac-ink); }
+.tracks a[aria-current="page"] small { color: var(--ac-ink-2); }
+.tag.lv { color: var(--ac-ink); background: var(--ac-fill); box-shadow: none; font-weight: 800; }
+.setcard .sc-h .tag.lv { margin-left: auto; }
+.ide-sets a[data-level="1"]::before { background: #8fe3ec; } .ide-sets a[data-level="2"]::before { background: #e9c983; } .ide-sets a[data-level="3"]::before { background: #f7a866; }
+/* ── SWEA 로드맵 (코딩테스트 트랙) ── */
+.road-sum { margin: 10px 0 8px; font-size: 14px; color: var(--body); } .road-sum b { color: var(--go); }
+.stage { margin: 6px 0; border: 1px solid var(--line); border-radius: 10px; background: rgba(5, 12, 15, .5); }
+.stage summary { cursor: pointer; padding: 10px 14px; font-size: 14.5px; font-weight: 700; color: var(--ivory); display: flex; align-items: center; gap: 10px; }
+.stage summary .res { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.roadlist { list-style: none; margin: 0; padding: 2px 10px 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2px 10px; }
+.roadlist label { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 6px; font-size: 14px; color: var(--body); cursor: pointer; }
+.roadlist label:hover { background: rgba(239, 230, 210, .05); }
+.roadlist input { accent-color: var(--go); width: 15px; height: 15px; margin: 0; }
+.roadlist .num { font-family: var(--mono); font-size: 12.5px; color: var(--gold); font-variant-numeric: tabular-nums; min-width: 38px; }
+.roadlist .nm { color: var(--ivory); }
+.roadlist .dl { margin-left: auto; font-size: 11.5px; font-weight: 700; color: var(--muted); }
+.roadlist input:checked ~ .nm { color: var(--muted); text-decoration: line-through; }
+@media (max-width: 720px) { .tracks { grid-template-columns: 1fr; } .tracks a { flex-direction: row; align-items: baseline; gap: 10px; } }

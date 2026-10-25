@@ -1,0 +1,14 @@
+6
+apple rabbit apple tea rabbit apple
+=====
+5
+b a c a b
+=====
+1
+hello
+=====
+4
+zzz zzz zzz zzz
+=====
+8
+ab a abc a ab b a abc

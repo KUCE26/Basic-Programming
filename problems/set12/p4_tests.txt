@@ -1,0 +1,28 @@
+4
+alice 90
+bob 85
+carol 90
+dave 70
+=====
+3
+zed 50
+amy 50
+kim 50
+=====
+1
+rabbit 100
+=====
+5
+b 0
+a 0
+c 100
+d 100
+e 1
+=====
+6
+min 77
+Jun 77
+ana 77
+zoe 99
+bo 12
+al 99

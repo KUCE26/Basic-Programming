@@ -3,40 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>기초프로그래밍 · 중간고사 모의테스트</title>
-  <meta name="description" content="고려대학교 기초프로그래밍(Python) 중간고사 대비 — 엘리스 실습 형식 모의테스트 A–E 5세트 50문제, 브라우저에서 바로 실행·자동 채점">
+  <title>기초프로그래밍 · 중간 · 기말 · 코딩테스트 준비</title>
+  <meta name="description" content="고려대학교 기초프로그래밍 대비 — 중간고사(Python) 모의테스트, 기말고사(C) 난이도별 문제, 삼성 SW역량테스트(C++) 워밍업. 엘리스 실습 형식, 브라우저에서 바로 실행·자동 채점">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
-  <link rel="stylesheet" href="assets/site.css?v=1792306285">
-  <link rel="stylesheet" href="assets/app.css?v=1792306285">
-  <script defer src="assets/problems.js?v=1792306285"></script>
-  <script defer src="assets/common.js?v=1792306285"></script>
-  <script defer src="assets/index.js?v=1792306285"></script>
+  <link rel="stylesheet" href="assets/site.css?v=1792946195">
+  <link rel="stylesheet" href="assets/app.css?v=1792946195">
+  <script defer src="assets/problems.js?v=1792946195"></script>
+  <script defer src="assets/common.js?v=1792946195"></script>
+  <script defer src="assets/index.js?v=1792946195"></script>
 </head>
 <body>
   <header class="top wrap">
     <a class="brand" href="index.html">
       <img src="assets/img/ku-emblem.webp" alt="" width="164" height="220">
-      <span><b>기초프로그래밍</b>중간고사 모의테스트</span>
+      <span><b>기초프로그래밍</b>중간 · 기말 · 코딩테스트 준비</span>
     </a>
     <nav class="top-links" aria-label="페이지">
       <a href="practice.html?set=1">실습 시작</a>
     </nav>
   </header>
 
+  <nav class="wrap tracks" id="tracks" aria-label="준비 트랙">
+    <a href="index.html?track=mid" data-track="mid" data-level="4"><span class="tk">01</span><b>중간고사</b><small>Python · 2~8차시 · 끝</small></a>
+    <a href="index.html?track=final" data-track="final" data-level="3"><span class="tk">02</span><b>기말고사</b><small>C · 13차시~ · 진행 중</small></a>
+    <a href="index.html?track=ct" data-track="ct" data-level="1"><span class="tk">03</span><b>코딩테스트</b><small>C++ · 삼성 A형 · 겨울</small></a>
+  </nav>
+
   <section class="hero wrap">
-    <p class="eyebrow">PYTHON · MOCK TEST</p>
-    <h1>중간고사 모의테스트</h1>
-    <p class="lead">엘리스 실습과 같은 형식이에요. 왼쪽 지시사항을 읽고 오른쪽 편집기에 코드를 쓴 뒤 <b>실행</b>으로 확인하고 <b>제출</b>하면 숨겨진 테스트케이스로 바로 채점돼요. 세트마다 10문제, 문제당 10점.</p>
-    <div class="facts">
-      <span><b>5</b>세트 <b>50</b>문제 + 엘리스 과제·연습 <b>25</b>문제</span>
-      <span>범위 엘리스 <b>2 – 8차시</b></span>
-      <span>난이도 4·8차시 과제 수준</span>
-      <span>import · try · class 없이</span>
-      <span>브라우저에서 바로 실행</span>
-    </div>
+    <p class="eyebrow" id="eyebrow"></p>
+    <h1 id="h1"></h1>
+    <p class="lead" id="lead"></p>
+    <div class="facts" id="facts"></div>
   </section>
 
   <main class="wrap">
@@ -46,27 +46,9 @@
     </div>
     <div class="setgrid" id="sets"></div>
 
-    <section class="howto">
-      <div class="card">
-        <h3>세트마다 같은 10슬롯</h3>
-        <p>시험에서 어떤 유형이 나와도 한 번씩은 풀어 본 상태가 되도록, A–E 다섯 세트 모두 아래 순서로 짰어요. <b>과제</b> 세트는 교수님이 시험 난이도의 기준이라고 한 엘리스 4차시·8차시 과제 15문제 원본, <b>연습</b> 세트는 12차시 종합 연습 문제 중 시험 범위 안 10문제예요. <b>범위밖</b>(11차시 과제 등 모듈·클래스·정규식 8문제)은 중간고사엔 안 나오니 시간이 남을 때만 보세요.</p>
-        <ul class="slotlist" id="slots"></ul>
-      </div>
-      <div class="card" style="margin-top:14px">
-        <h3>이렇게 쓰세요</h3>
-        <ol>
-          <li>시험처럼 풀려면 세트 하나를 골라 1번부터 10번까지 <b>정답 보기 없이</b> 끝까지 제출하고 점수를 확인하세요.</li>
-          <li>틀린 문제는 <b>채점 결과</b>의 빨간 줄(기대 출력과 다른 줄)을 보고 고친 뒤 다시 제출하세요. 띄어쓰기·콜론·소수점 자릿수가 가장 흔한 실수예요.</li>
-          <li>막히면 <b>입력</b> 탭에 입력 예시를 넣고 <b>실행</b>으로 중간 값을 <code>print()</code>해 보세요. 끝나지 않는 반복문은 5초 뒤 자동으로 멈춰요.</li>
-          <li>편집기에서 <code>Ctrl+Enter</code>(Mac은 <code>⌘+Enter</code>)는 실행, <code>Ctrl+Shift+Enter</code>는 제출이에요.</li>
-        </ol>
-      </div>
-    </section>
+    <section class="howto" id="howto"></section>
   </main>
 
-  <footer class="foot">
-    엘리스 「기초 프로그래밍」 2~8차시 실습·과제와 엘리스 아카데미 「Do it! 첫 파이썬」의 문제 유형을 바탕으로 새로 만든 문제예요. 모든 모범 답안은 테스트 369개로 확인했어요.<br>
-    Python은 브라우저 안에서 실행돼요(Pyodide). 기록은 이 브라우저에만 저장돼요.
-  </footer>
+  <footer class="foot" id="foot"></footer>
 </body>
 </html>

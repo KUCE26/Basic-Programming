@@ -1,6 +1,7 @@
-/* 실습 페이지: practice.html?set=1…5&q=1…10
-   - 문제 데이터: assets/problems.js (tools/build.py 가 problems/ 에서 생성)
+/* 실습 페이지: practice.html?set=N&q=K
+   - 문제 데이터: assets/problems.js (tools/build.py 가 problems/ 에서 생성). 세트마다 track(mid·final·ct) 과 lang(python·c·cpp) 이 있어요.
    - Python 실행: Pyodide(CPython 3.12 WebAssembly)를 Web Worker 안에서 돌려요. 무한 반복이면 5초 뒤 worker 를 끊고 다시 띄워요.
+   - C/C++ 실행: 브라우저에서 컴파일할 수 없어서 Compiler Explorer(godbolt.org) 공개 API 로 gcc/g++ 컴파일·실행 결과를 받아요. 실행마다 2~4초.
    - 채점 규칙은 check.py 와 같아요: 줄 끝 공백과 맨 끝 빈 줄은 무시, 그 외는 글자 하나까지 같아야 통과. */
 (function () {
   var D = window.BP_PROBLEMS;
@@ -8,6 +9,12 @@
 
   var PYODIDE = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
   var TIMEOUT_MS = 5000;
+  var GODBOLT = 'https://godbolt.org/api/compiler/';
+  /* Compiler Explorer 컴파일러 id (앞의 것부터 시도, 없으면 다음) · 옵션은 tools/langs.py 와 같게 */
+  var CE = {
+    c:   { ids: ['cg151', 'cg142', 'cg141'], args: '-std=c11 -O0 -lm', lang: 'c',   file: 'main.c',   mode: 'ace/mode/c_cpp', name: 'C (gcc)' },
+    cpp: { ids: ['g151', 'g142', 'g141'],    args: '-std=c++17 -O2',   lang: 'c++', file: 'main.cpp', mode: 'ace/mode/c_cpp', name: 'C++ (g++)' }
+  };
   var esc = BP.escapeHtml;
 
   /* ── 주소 → 세트·문제 ── */
@@ -18,11 +25,32 @@
   var qNo = parseInt(qs.get('q'), 10);
   if (!(qNo >= 1 && qNo <= S.problems.length)) qNo = 1;
   var Q = S.problems[qNo - 1];
+  var LANG = S.lang || 'python';
+  var TRACK = S.track || 'mid';
+  var TR = (D.tracks && D.tracks[TRACK]) || { name: '모의테스트' };
+  document.body.setAttribute('data-track', TRACK);
+  document.body.setAttribute('data-lang', LANG);
+  if (LANG !== 'python') {
+    document.querySelector('.ed-head .file').innerHTML = '<i aria-hidden="true"></i>' + CE[LANG].file;
+    document.getElementById('in-note-fn').textContent = LANG === 'c' ? 'scanf()·getchar()·fgets()' : 'cin·getline()';
+  }
+  var sub = document.querySelector('.brand span');
+  if (sub) sub.innerHTML = '<b>기초프로그래밍</b>' + esc(TR.name) + ' 준비';
+  var dash = document.querySelector('.top-links a[href="index.html"]');
+  if (dash) dash.href = 'index.html?track=' + TRACK;
+  (function () {   // 세트 탭: 같은 트랙의 세트만
+    var box = document.getElementById('set-tabs'), h = '';
+    D.sets.forEach(function (set) {
+      if ((set.track || 'mid') !== TRACK) return;
+      h += '<a href="practice.html?set=' + set.n + '" data-set="' + set.n + '"' + (set.outside ? ' class="outside"' : '') + '>' + esc(set.label) + '<small></small></a>';
+    });
+    box.innerHTML = h;
+  })();
 
   var progress = BP.loadProgress();
   var codes = BP.loadCode();
 
-  document.title = qNo + '. ' + Q.title + ' · ' + S.title + ' · 기초프로그래밍';
+  document.title = qNo + '. ' + Q.title + ' · ' + S.title + ' · 기초프로그래밍 ' + TR.name;
 
   /* ── 세트 탭 · 문제 번호 · 진행률 ── */
   function renderTabs() {
@@ -31,6 +59,7 @@
       var n = parseInt(tabs[i].getAttribute('data-set'), 10);
       var set = D.sets[n - 1];
       if (!set) { tabs[i].hidden = true; continue; }
+      tabs[i].setAttribute('data-level', set.level || 0);
       var st = BP.setStats(set, progress);
       tabs[i].title = set.title + ' — ' + set.sub + ' (통과 ' + st.pass + '/' + st.total + ')';
       tabs[i].classList.toggle('done', st.pass === st.total);
@@ -74,6 +103,7 @@
   document.getElementById('q-slot').textContent = Q.slot;
   document.getElementById('q-lesson').textContent = '엘리스 ' + Q.lesson;
   if (S.outside) { var ob = document.createElement('span'); ob.className = 'tag warn'; ob.textContent = '중간고사 범위 밖'; document.getElementById('q-lesson').after(ob); }
+  if (S.level) { var lv = document.createElement('span'); lv.className = 'tag lv'; lv.textContent = 'Lv' + S.level; document.getElementById('q-slot').before(lv); }
   (function () {
     var h = Q.story + '<h3>지시사항</h3>' + Q.instructions;
     Q.examples.forEach(function (ex, i) {
@@ -94,7 +124,7 @@
   if (window.ace) {
     ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/');
     editor = ace.edit('editor', {
-      mode: 'ace/mode/python', theme: 'ace/theme/tomorrow_night_eighties',
+      mode: LANG === 'python' ? 'ace/mode/python' : CE[LANG].mode, theme: 'ace/theme/tomorrow_night_eighties',
       fontSize: 14, tabSize: 4, useSoftTabs: true, showPrintMargin: false, wrap: true,
       highlightActiveLine: true, displayIndentGuides: true
     });
@@ -210,6 +240,63 @@
   function setStat(cls, text) { pystat.className = 'pystat ' + cls; pystat.innerHTML = '<span class="dot"></span>' + esc(text); }
   function setButtons() { var on = pyReady && !busy; btnRun.disabled = !on; btnSubmit.disabled = !on; }
 
+  /* ── C/C++: Compiler Explorer ── */
+  var CE_TIMEOUT_MS = 25000;
+  function ceLines(a) { return (a || []).map(function (l) { return l.text == null ? String(l) : l.text; }).join('\n'); }
+  function ceOnce(id, code, input) {
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var t = setTimeout(function () { if (ctrl) ctrl.abort(); }, CE_TIMEOUT_MS);
+    var body = { source: code, options: { userArguments: CE[LANG].args, compilerOptions: { executorRequest: true }, filters: { execute: true },
+      executeParameters: { args: [], stdin: input } }, lang: CE[LANG].lang, allowStoreCodeDebug: false };
+    return fetch(GODBOLT + id + '/compile', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { clearTimeout(t); if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; } return r.json(); })
+      .then(function (j) {
+        var br = j.buildResult || {};
+        if (br.code != null && br.code !== 0) {
+          var ce = ceLines(br.stderr) || ceLines(j.stderr) || '컴파일 오류';
+          return { out: '', err: ce.replace(/<source>:/g, CE[LANG].file + ':').replace(/\x1b\[[0-9;]*m/g, ''), compileError: true };
+        }
+        var out = ceLines(j.stdout), err = ceLines(j.stderr).replace(/\x1b\[[0-9;]*m/g, '');
+        if (j.timedOut) err += (err ? '\n' : '') + '시간 초과 — 끝나지 않는 반복문이 있는지, 입력을 기다리며 멈추지는 않는지 확인하세요';
+        else if (j.code != null && j.code !== 0 && !j.timedOut) err += (err ? '\n' : '') + '(프로그램이 종료 코드 ' + j.code + ' 로 끝났어요' + (j.code < 0 || j.code > 128 ? ' — 잘못된 메모리 접근이나 0 으로 나누기를 확인하세요' : ' — main 이 return 0; 으로 끝나는지 확인하세요') + ')';
+        return { out: out, err: err.trim(), timedOut: !!j.timedOut };
+      });
+  }
+  function ceRun(code, input, k) {
+    k = k || 0;
+    return ceOnce(CE[LANG].ids[k], code, input).catch(function (e) {
+      if (e.status === 404 && k + 1 < CE[LANG].ids.length) return ceRun(code, input, k + 1);
+      throw e;
+    });
+  }
+  function ceExecute(code, inputs, handlers) {
+    if (busy) return;
+    busy = true; setButtons(); setStat('busy', '컴파일·실행 중… (' + CE[LANG].name + ', 2~4초)');
+    var results = new Array(inputs.length), done = 0, failed = null, next = 0, running = 0, LIMIT = 3;
+    function finish() {
+      busy = false; setStat('ready', CE[LANG].name + ' · godbolt.org 에서 실행'); setButtons();
+      if (failed) handlers.done([], failed);
+      else {
+        // 컴파일 오류면 테스트마다 같은 오류가 반복되니 하나만 보여 준다
+        var allTimeout = results.length && results.every(function (r) { return r.timedOut; });
+        if (allTimeout && handlers.timeout) handlers.timeout(); else handlers.done(results);
+      }
+    }
+    function pump() {
+      while (running < LIMIT && next < inputs.length && !failed) {
+        (function (i) {
+          running++;
+          ceRun(code, inputs[i]).then(function (r) { results[i] = r; }, function (e) {
+            failed = e.name === 'AbortError' ? '컴파일 서버 응답이 ' + (CE_TIMEOUT_MS / 1000) + '초 안에 오지 않았어요 — 잠시 뒤 다시 시도하세요' :
+              '컴파일 서버(godbolt.org)에 연결하지 못했어요 (' + (e.message || e) + '). 인터넷 연결을 확인하고 잠시 뒤 다시 시도하세요';
+          }).then(function () { running--; done++; if (handlers.progress) handlers.progress(done); if (done === inputs.length || failed) { if (running === 0) finish(); } else pump(); });
+        })(next++);
+      }
+    }
+    pump();
+  }
+
   function startWorker() {
     pyReady = false; busy = false; setButtons();
     setStat('', 'Python 준비 중… (처음 한 번은 10초쯤 걸려요)');
@@ -240,14 +327,15 @@
       p.timeout();
     }, TIMEOUT_MS);
   }
-  function execute(code, inputs, handlers) {
+  var execute = function (code, inputs, handlers) {
     if (!pyReady || busy) return;
     busy = true; setButtons(); setStat('busy', '실행 중…');
     pending = { id: ++reqId, onProgress: handlers.progress || function () {}, done: handlers.done, timeout: handlers.timeout };
     armKill();
     worker.postMessage({ id: pending.id, code: code, inputs: inputs });
   }
-  startWorker();
+  if (LANG === 'python') startWorker();
+  else { pyReady = true; setButtons(); setStat('ready', CE[LANG].name + ' · 실행하면 godbolt.org 로 보내 컴파일해요'); execute = ceExecute; }
 
   /* ── 실행 ── */
   var con = document.getElementById('console');
@@ -264,12 +352,12 @@
         var r = results[0];
         var h = r.out ? esc(r.out) : '';
         if (r.err) h += (h ? '\n' : '') + '<span class="err">' + esc(r.err) + '</span>';
-        if (!h) h = '<span class="meta">(출력이 없어요 — print() 를 빠뜨리지 않았는지 확인하세요)</span>';
+        if (!h) h = '<span class="meta">(출력이 없어요 — ' + (LANG === 'python' ? 'print()' : LANG === 'c' ? 'printf()' : 'cout') + ' 를 빠뜨리지 않았는지 확인하세요)</span>';
         con.innerHTML = h;
       },
       timeout: function () {
         con.className = 'console timeout';
-        con.innerHTML = '<span class="err">시간 초과 (' + (TIMEOUT_MS / 1000) + '초)</span>\n<span class="meta">끝나지 않는 반복문이 있는지 확인하세요. while 조건이 바뀌는지, break 가 실행되는지, input() 횟수가 입력 줄 수보다 많지 않은지 보세요.</span>';
+        con.innerHTML = '<span class="err">시간 초과' + (LANG === 'python' ? ' (' + (TIMEOUT_MS / 1000) + '초)' : '') + '</span>\n<span class="meta">끝나지 않는 반복문이 있는지 확인하세요. while 조건이 바뀌는지, break 가 실행되는지, ' + (LANG === 'python' ? 'input()' : '입력') + ' 횟수가 입력 줄 수보다 많지 않은지 보세요.</span>';
       }
     });
   }
@@ -299,6 +387,11 @@
       progress: function (k) { gradeBox.innerHTML = '<p class="g-tip">채점 중… (' + k + '/' + Q.cases.length + ')</p>'; },
       done: function (results, error) {
         if (error) { gradeBox.innerHTML = '<p class="g-tip">' + esc(error) + '</p>'; return; }
+        if (results.length && results[0].compileError) {
+          gradeBox.innerHTML = '<div class="g-sum fail"><span class="big">컴파일 오류</span><span>코드가 컴파일되지 않아 채점할 수 없어요.</span><small>아래 메시지의 줄 번호를 보고 고친 뒤 다시 제출하세요.</small></div><div class="err" style="white-space:pre-wrap">' + esc(results[0].err) + '</div>';
+          gradeCnt.textContent = '0/' + Q.cases.length; gradeCnt.className = 'cnt bad';
+          return;
+        }
         var passed = 0, h = '';
         results.forEach(function (r, i) {
           var exp = Q.cases[i][1], got = norm(r.out), ok = !r.err && got === exp;
@@ -313,7 +406,7 @@
         finishGrade(passed, results.length, h, false);
       },
       timeout: function () {
-        finishGrade(0, Q.cases.length, '<p class="g-tip">시간 초과 (' + (TIMEOUT_MS / 1000) + '초) — 끝나지 않는 반복문이 있는지 확인하세요. 실행 탭에서 입력 예시로 먼저 돌려 보세요.</p>', true);
+        finishGrade(0, Q.cases.length, '<p class="g-tip">시간 초과 — 끝나지 않는 반복문이 있는지 확인하세요. 실행 탭에서 입력 예시로 먼저 돌려 보세요.</p>', true);
       }
     });
   }

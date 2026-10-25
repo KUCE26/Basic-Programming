@@ -9,11 +9,11 @@ import html
 import json
 import os
 import re
-import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+from langs import norm, run as run_lang, sol_path  # noqa: E402
 
 SET_INFO = {
     1: ("A", "A세트", "편의점에서 할인 쿠폰까지", "입출력·리스트·딕셔너리·문자열·조건·반복·함수 10슬롯을 가장 기본형으로 묶은 세트"),
@@ -22,7 +22,13 @@ SET_INFO = {
     4: ("D", "D세트", "택시 요금부터 최솟값 직접 구하기까지", "FizzBuzz 변형, 두 번째로 큰 값 등 반복문 응용이 많은 세트"),
     5: ("E", "E세트", "피자 나누기부터 리스트 변환기까지", "구구단 표·더치페이 등 출력 형식 맞추기와 함수 심화가 중심인 세트"),
 }
-# 6번 이후 세트(엘리스 과제·연습)는 problems/setN/meta.json 에 label·title·sub·lead·slots 가 있다.
+# 6번 이후 세트(엘리스 과제·연습, 기말 C 세트, 코테 C++ 세트)는 problems/setN/meta.json 에 있다.
+#   label·title·sub·lead·slots·scored·outside 에 더해 track(mid·final·ct)·lang(python·c·cpp)·level 을 둔다.
+TRACKS = {
+    "mid":   {"name": "중간고사", "lang": "python", "lead": "Python · 엘리스 2~8차시"},
+    "final": {"name": "기말고사", "lang": "c",      "lead": "C · 엘리스 13차시~"},
+    "ct":    {"name": "코딩테스트", "lang": "cpp",  "lead": "C++ · 삼성 SW역량테스트 A형"},
+}
 
 SLOTS = ["입출력·산술", "포맷팅·형 변환", "리스트", "딕셔너리", "문자열", "조건문", "for 반복", "while·break", "함수", "함수 심화"]
 LESSON = ["2차시", "2·4차시", "3차시", "4차시", "4차시", "5차시", "6차시", "6차시", "7차시", "8차시"]
@@ -36,19 +42,11 @@ def set_meta(n):
     else:
         label, title, sub, lead = SET_INFO[n]
         m = {"label": label, "title": title, "sub": sub, "lead": lead, "slots": [list(x) for x in zip(SLOTS, LESSON)]}
+    m.setdefault("track", "mid")
+    m.setdefault("lang", TRACKS[m["track"]]["lang"])
+    m.setdefault("level", 0)
     m["count"] = len([f for f in os.listdir(d) if re.fullmatch(r"p\d+\.md", f)])
     return m
-
-
-def norm(s):
-    return "\n".join(l.rstrip() for l in s.rstrip("\n").split("\n"))
-
-
-def run(path, inp):
-    r = subprocess.run([sys.executable, "-I", path], input=inp, capture_output=True, text=True, timeout=5)
-    if r.returncode:
-        raise RuntimeError(f"{path}: {r.stderr.strip().splitlines()[-1]}")
-    return norm(r.stdout)
 
 
 def inline(text):
@@ -72,7 +70,7 @@ def md_to_html(body):
             while j < len(lines) and not lines[j].startswith("```"):
                 buf.append(lines[j])
                 j += 1
-            cls = ' class="lang-python"' if lang == "python" else ""
+            cls = f' class="lang-{lang}"' if lang in ("python", "c", "cpp") else ""
             out.append(f"<pre{cls}><code>{html.escape(chr(10).join(buf))}</code></pre>")
             i = j + 1
             continue
@@ -121,8 +119,15 @@ def split_sections(md):
 def build_problem(n, k, meta):
     d = os.path.join(ROOT, "problems", f"set{n}")
     md = open(f"{d}/p{k}.md", encoding="utf-8").read().strip()
-    sol_path = f"{d}/p{k}_sol.py"
-    sol = open(sol_path, encoding="utf-8").read().strip()
+    lang = meta["lang"]
+    sp = sol_path(n, k, lang)
+    sol = open(sp, encoding="utf-8").read().strip()
+
+    def run(inp):
+        out, err = run_lang(sp, inp, lang)
+        if err:
+            raise RuntimeError(f"{sp}: {err}")
+        return out
     tests = [t if t.endswith("\n") else t + "\n" for t in open(f"{d}/p{k}_tests.txt", encoding="utf-8").read().split("=====\n")]
     tests = [t for t in tests if t.strip()] or ["\n"]   # 입력이 없는 문제는 빈 입력 하나로 채점
 
@@ -134,7 +139,7 @@ def build_problem(n, k, meta):
     cur_in = None
     for h, body in secs:
         if h == "시작 코드":
-            m = re.search(r"```python\n(.*?)```", body, re.S)
+            m = re.search(r"```(?:python|c|cpp)\n(.*?)```", body, re.S)
             starter = m.group(1).rstrip("\n") + "\n" if m else ""
         elif h == "지시사항":
             instr_html = md_to_html(body)
@@ -149,13 +154,13 @@ def build_problem(n, k, meta):
     # 예시 출력이 모범 답안 실행 결과와 같은지 확인
     for i, ex in enumerate(examples, 1):
         inp = ex["in"] if ex["in"].endswith("\n") else ex["in"] + "\n"
-        got = run(sol_path, inp)
+        got = run(inp)
         if got != ex["out"]:
             raise SystemExit(f"set{n} p{k} 예시 {i} 불일치\n기대: {ex['out']!r}\n실행: {got!r}")
 
-    cases = [[t, run(sol_path, t)] for t in tests]
+    cases = [[t, run(t)] for t in tests]
     if not starter:
-        starter = f"# {title}\n"
+        starter = f"# {title}\n" if lang == "python" else "#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}\n"
     return {
         "id": f"s{n}q{k}",
         "no": k,
@@ -181,9 +186,10 @@ def main():
         probs = [build_problem(n, k, meta) for k in range(1, meta["count"] + 1)]
         total_cases += sum(len(p["cases"]) for p in probs)
         sets.append({"n": n, "label": meta["label"], "title": meta["title"], "sub": meta["sub"], "lead": meta["lead"],
-                     "scored": meta.get("scored", True), "outside": meta.get("outside", False), "problems": probs})
+                     "scored": meta.get("scored", True), "outside": meta.get("outside", False),
+                     "track": meta["track"], "lang": meta["lang"], "level": meta["level"], "problems": probs})
         print(f"set{n}: {meta['count']}문제, 테스트 {sum(len(p['cases']) for p in probs)}개")
-    data = {"sets": sets, "slots": SLOTS}
+    data = {"sets": sets, "slots": SLOTS, "tracks": TRACKS}
     js = "/* tools/build.py 가 problems/ 에서 만든 파일 — 직접 고치지 말고 problems/ 를 고친 뒤 다시 빌드하세요 */\nwindow.BP_PROBLEMS = " + json.dumps(data, ensure_ascii=False) + ";\n"
     out = os.path.join(ROOT, "assets", "problems.js")
     open(out, "w", encoding="utf-8").write(js)

@@ -4,34 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>실습 · 기초프로그래밍 모의테스트</title>
-  <meta name="description" content="기초프로그래밍 중간고사 모의테스트 — 브라우저에서 바로 Python 코드를 작성하고 실행·제출하면 엘리스처럼 테스트케이스로 채점돼요">
+  <meta name="description" content="기초프로그래밍 중간·기말·코딩테스트 대비 — 브라우저에서 바로 Python·C·C++ 코드를 작성하고 실행·제출하면 엘리스처럼 테스트케이스로 채점돼요">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
-  <link rel="stylesheet" href="assets/site.css?v=1792306285">
-  <link rel="stylesheet" href="assets/app.css?v=1792306285">
+  <link rel="stylesheet" href="assets/site.css?v=1792946195">
+  <link rel="stylesheet" href="assets/app.css?v=1792946195">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/ace.js" crossorigin="anonymous"></script>
-  <script defer src="assets/problems.js?v=1792306285"></script>
-  <script defer src="assets/common.js?v=1792306285"></script>
-  <script defer src="assets/practice.js?v=1792306285"></script>
+  <script defer src="assets/problems.js?v=1792946195"></script>
+  <script defer src="assets/common.js?v=1792946195"></script>
+  <script defer src="assets/practice.js?v=1792946195"></script>
 </head>
 <body class="ide">
   <header class="top wrap ide-top">
     <a class="brand" href="index.html">
       <img src="assets/img/ku-emblem.webp" alt="" width="164" height="220">
-      <span><b>기초프로그래밍</b>중간고사 모의테스트</span>
+      <span><b>기초프로그래밍</b>모의테스트</span>
     </a>
-    <nav class="levels sets ide-sets" id="set-tabs" aria-label="모의테스트 세트">
-      <a href="practice.html?set=1" data-set="1">A<small></small></a>
-      <a href="practice.html?set=2" data-set="2">B<small></small></a>
-      <a href="practice.html?set=3" data-set="3">C<small></small></a>
-      <a href="practice.html?set=4" data-set="4">D<small></small></a>
-      <a href="practice.html?set=5" data-set="5">E<small></small></a>
-      <a href="practice.html?set=6" data-set="6">과제<small></small></a>
-      <a href="practice.html?set=7" data-set="7">연습<small></small></a>
-      <a href="practice.html?set=8" data-set="8" class="outside">범위밖<small></small></a>
-    </nav>
+    <nav class="levels sets ide-sets" id="set-tabs" aria-label="문제 세트"></nav>
     <nav class="top-links" aria-label="페이지">
       <a href="index.html">대시보드</a>
     </nav>
@@ -92,7 +83,7 @@
         </div>
         <div class="opanel" id="panel-run" role="tabpanel"><pre class="console" id="console">아직 실행하지 않았어요. 코드를 작성한 뒤 <b>실행</b>을 누르세요.</pre></div>
         <div class="opanel" id="panel-in" role="tabpanel" hidden>
-          <p class="in-note">프로그램이 <code>input()</code>으로 읽을 내용이에요. 한 줄에 하나씩, 입력 예시처럼 적으세요.</p>
+          <p class="in-note">프로그램이 <code id="in-note-fn">input()</code>으로 읽을 내용이에요. 한 줄에 하나씩, 입력 예시처럼 적으세요.</p>
           <textarea class="stdin" id="stdin" spellcheck="false" rows="6"></textarea>
           <div class="in-presets" id="in-presets"></div>
         </div>
@@ -102,7 +93,7 @@
   </main>
 
   <footer class="foot">
-    Python은 내 브라우저 안에서 실행돼요(Pyodide · CPython 3.12). 코드와 채점 기록은 이 브라우저에만 저장되고 어디로도 보내지 않아요. · <a href="index.html">대시보드</a>
+    Python은 내 브라우저 안에서 실행돼요(Pyodide · CPython 3.12). C·C++은 실행 버튼을 누를 때 코드와 입력을 <a href="https://godbolt.org" rel="noopener">Compiler Explorer</a>(godbolt.org)로 보내 gcc로 컴파일한 결과를 받아요. 코드와 채점 기록은 이 브라우저에만 저장돼요. · <a href="index.html">대시보드</a>
   </footer>
 </body>
 </html>

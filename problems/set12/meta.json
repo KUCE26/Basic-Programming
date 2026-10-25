@@ -1,0 +1,44 @@
+{
+ "label": "C++",
+ "title": "C++ 전환 워밍업",
+ "sub": "C 를 아는 사람이 2주 안에 C++·STL 로 넘어가기 위한 8문제",
+ "lead": "cin/cout·string·vector·sort·pair·map·stack·queue 를 한 번씩 쓰고, 마지막 두 문제로 격자 BFS 와 2차원 시뮬레이션의 뼈대를 손에 익혀요. 이 세트가 끝나면 SWEA D2~D3 를 C++ 로 다시 풀 준비가 돼요",
+ "scored": false,
+ "track": "ct",
+ "lang": "cpp",
+ "level": 0,
+ "slots": [
+  [
+   "cin/cout",
+   "C++ 전환"
+  ],
+  [
+   "string·getline",
+   "C++ 전환"
+  ],
+  [
+   "vector·sort",
+   "STL"
+  ],
+  [
+   "pair·정렬 기준",
+   "STL"
+  ],
+  [
+   "map",
+   "STL"
+  ],
+  [
+   "stack",
+   "자료구조"
+  ],
+  [
+   "BFS",
+   "그래프"
+  ],
+  [
+   "2차원 시뮬",
+   "구현"
+  ]
+ ]
+}

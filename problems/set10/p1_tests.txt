@@ -1,0 +1,9 @@
+Pencil 500 12
+=====
+Notebook 2800 5
+=====
+A 1 1
+=====
+StickyNote 99999 99
+=====
+Eraser 300 7
