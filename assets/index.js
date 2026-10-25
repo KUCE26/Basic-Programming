@@ -30,7 +30,7 @@
       eyebrow: 'C++ · SAMSUNG SW TEST', h1: '코딩테스트 준비 (C++)', level: '1',
       lead: '겨울에 시작할 삼성 SW역량테스트 A형 준비. 먼저 <b>C++ 워밍업</b> 세트로 cin/cout·string·vector·sort·map·stack·queue 와 격자 BFS 뼈대를 손에 익히고, 그다음 방학특강 때 Python 으로 풀었던 <b>SWEA 문제를 C++ 로 다시</b> 풀어요. 문제를 이미 알아서 언어 차이에만 집중할 수 있어요.',
       facts: ['A형 = <b>완전탐색 · 시뮬레이션 · BFS/DFS · 백트래킹</b>', 'STL 사용 가능 (B형과 다름)', 'g++ <b>-std=c++17 -O2</b> 로 실행', '기말 끝난 뒤 시작, 월·수 2시간'],
-      howto: '<div class="card"><h3>SWEA 다시 풀기 로드맵 — 방학특강 solving club 36문제를 C++ 로</h3><p>워밍업 세트가 끝나면 아래 순서로 SWEA 에서 다시 풀어요. 번호로 검색하면 나와요. 풀고 나면 체크해 두세요(이 브라우저에만 저장).</p><div id="roadmap"></div></div>' +
+      howto: '<div class="card"><h3>SWEA 다시 풀기 로드맵 — 방학특강 solving club 35문제를 C++ 로</h3><p>워밍업 세트가 끝나면 아래 순서로 SWEA 에서 다시 풀어요. 번호로 검색하면 나와요. 풀고 나면 체크해 두세요(이 브라우저에만 저장).</p><div id="roadmap"></div></div>' +
         '<div class="card" style="margin-top:14px"><h3>이렇게 쓰세요</h3><ol><li>C 기말이 끝난 주부터 <b>워밍업 8문제</b>를 두 세션 안에 끝내요. C 에서 바뀌는 건 입출력과 STL 뿐이에요.</li><li>SWEA 문제는 <b>코드를 치기 전에 입출력 예시를 손으로 따라가</b> 보세요. 삼성 유형은 조건 하나 놓치면 끝이에요.</li><li>30분 넘게 막히면 풀이를 보고, <b>다음 세션 첫 15분에 다시</b> 풀어요.</li><li>모의 SW 역량테스트 단계(4단계)부터는 SWEA 에서 시간을 재고 푸세요. A형은 보통 3시간에 1~2문제예요.</li></ol></div>',
       foot: 'C++ 워밍업은 새로 만든 문제예요. SWEA 문제 목록은 사용자의 solving club 「26년 차세대통신 SW 방학특강」 기준이고, 문제 본문은 SWEA 에서 풀어요. C++ 코드는 실행할 때만 godbolt.org 로 보내 컴파일해요 (g++, -std=c++17).'
     }

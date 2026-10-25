@@ -8,10 +8,10 @@ int main(void) {
     c3 = getchar();
     c4 = getchar();
 
-    putchar(c1 + 3);
-    putchar(c2 + 3);
-    putchar(c3 + 3);
-    putchar(c4 + 3);
+    putchar((c1 - 'a' + 3) % 26 + 'a');
+    putchar((c2 - 'a' + 3) % 26 + 'a');
+    putchar((c3 - 'a' + 3) % 26 + 'a');
+    putchar((c4 - 'a' + 3) % 26 + 'a');
     putchar('\n');
     return 0;
 }
