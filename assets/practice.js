@@ -255,9 +255,9 @@
         var br = j.buildResult || {};
         if (br.code != null && br.code !== 0) {
           var ce = ceLines(br.stderr) || ceLines(j.stderr) || '컴파일 오류';
-          return { out: '', err: ce.replace(/<source>:/g, CE[LANG].file + ':').replace(/\x1b\[[0-9;]*m/g, ''), compileError: true };
+          return { out: '', err: ce.replace(/<source>:/g, CE[LANG].file + ':').replace(/\x1b\[[0-9;]*[A-Za-z]/g, ''), compileError: true };
         }
-        var out = ceLines(j.stdout), err = ceLines(j.stderr).replace(/\x1b\[[0-9;]*m/g, '');
+        var out = ceLines(j.stdout), err = ceLines(j.stderr).replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
         if (j.timedOut) err += (err ? '\n' : '') + '시간 초과 — 끝나지 않는 반복문이 있는지, 입력을 기다리며 멈추지는 않는지 확인하세요';
         else if (j.code != null && j.code !== 0 && !j.timedOut) err += (err ? '\n' : '') + '(프로그램이 종료 코드 ' + j.code + ' 로 끝났어요' + (j.code < 0 || j.code > 128 ? ' — 잘못된 메모리 접근이나 0 으로 나누기를 확인하세요' : ' — main 이 return 0; 으로 끝나는지 확인하세요') + ')';
         return { out: out, err: err.trim(), timedOut: !!j.timedOut };
