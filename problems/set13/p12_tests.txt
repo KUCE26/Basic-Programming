@@ -1,0 +1,17 @@
+4
+alice rabbit cat queen
+=====
+3
+bob bob alice
+=====
+1
+zed
+=====
+5
+ab a abc b aa
+=====
+2
+abc abd
+=====
+10
+j i h g f e d c b a
