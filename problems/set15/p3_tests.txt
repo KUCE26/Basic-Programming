@@ -1,0 +1,11 @@
+apple banana cherry
+=====
+Zebra apple Apple
+=====
+app apple ap
+=====
+cat cat cat
+=====
+10 9 100
+=====
+b B a

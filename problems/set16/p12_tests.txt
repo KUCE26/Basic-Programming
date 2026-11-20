@@ -1,0 +1,11 @@
+Hello My Name is Elice Rabbit!
+=====
+Wow C Programming is very fun! Oh My God
+=====
+  Hello    World  
+=====
+Alice
+=====
+a  b   c d 
+=====
+   leading and   trailing   
